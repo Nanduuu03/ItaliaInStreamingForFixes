@@ -8,12 +8,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io") {
-            credentials {
-                username = project.findProperty("gpr.user") as? String ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") as? String ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
+        maven("https://jitpack.io")
     }
 
     dependencies {
@@ -22,17 +17,27 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0")
     }
 }
+//json change may need to change in future to remove this
+
+/*
+w: file:///home/runner/work/cloudstream-extensions-phisher/cloudstream-extensions-phisher/src/StremioX/src/main/kotlin/com/phisher98/StremioX.kt:478:9 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+ */
+
+subprojects {
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        compilerOptions {
+            freeCompilerArgs.add("-Xannotation-default-target=param-property")
+        }
+    }
+}
 
 allprojects {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io") {
-            credentials {
-                username = project.findProperty("gpr.user") as? String ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") as? String ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
+        maven("https://jitpack.io")
     }
 }
 
@@ -47,14 +52,17 @@ subprojects {
 
     cloudstream {
         setRepo(System.getenv("GITHUB_REPOSITORY") ?: "https://github.com/DieGon7771/ItaliaInStreaming")
+        authors = listOf("Phisher98")
     }
 
     android {
         namespace = "it.dogior.hadEnough"
+
         defaultConfig {
             minSdk = 21
             compileSdkVersion(35)
             targetSdk = 35
+
         }
 
         compileOptions {
@@ -62,14 +70,14 @@ subprojects {
             targetCompatibility = JavaVersion.VERSION_1_8
         }
 
+
         tasks.withType<KotlinJvmCompile> {
             compilerOptions {
                 jvmTarget.set(JvmTarget.JVM_1_8)
                 freeCompilerArgs.addAll(
                     "-Xno-call-assertions",
                     "-Xno-param-assertions",
-                    "-Xno-receiver-assertions",
-                    "-Xannotation-default-target=param-property"
+                    "-Xno-receiver-assertions"
                 )
             }
         }
@@ -78,9 +86,9 @@ subprojects {
     dependencies {
         val implementation by configurations
         val cloudstream by configurations
-        
         cloudstream("com.lagradost:cloudstream3:pre-release")
 
+        // Other dependencies
         implementation(kotlin("stdlib"))
         implementation("com.github.Blatzar:NiceHttp:0.4.16")
         implementation("org.jsoup:jsoup:1.22.1")
@@ -92,6 +100,8 @@ subprojects {
         implementation("me.xdrop:fuzzywuzzy:1.4.0")
         implementation("com.google.code.gson:gson:2.13.2")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+        implementation("com.github.vidstige:jadb:v1.2.1")
+        implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
     }
 }
 
