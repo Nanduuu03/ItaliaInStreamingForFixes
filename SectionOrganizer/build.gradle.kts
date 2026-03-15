@@ -7,7 +7,7 @@ version = 1
 cloudstream {
     description = "Organizza homepage tra vari plugin"
     authors = listOf("RowdyRushya, Phisher98, DieGon") 
-    status = 3
+    status = 0
     tvTypes = listOf("All")
     requiresResources = true
     language = "it"
