@@ -86,7 +86,6 @@ class GuardaSerie : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        // Costruisci URL con paginazione
         val baseUrl = if (request.data == mainUrl) {
             mainUrl
         } else {
@@ -101,7 +100,6 @@ class GuardaSerie : MainAPI() {
         val items = mutableListOf<SearchResponse>()
         
         if (request.data == mainUrl) {
-            // Homepage: slider
             items.addAll(doc.select(".slider .item").mapNotNull { element ->
                 val link = element.select("a").attr("href")
                 val title = cleanTitle(element.select("img").attr("alt"))
@@ -116,7 +114,6 @@ class GuardaSerie : MainAPI() {
                 } else null
             })
         } else {
-            // Sezioni con paginazione
             items.addAll(doc.select(".mlnew").mapNotNull { element ->
                 val link = element.select(".mlnh-thumb a").attr("href")
                 val title = cleanTitle(element.select("h2 a").text())
@@ -132,7 +129,6 @@ class GuardaSerie : MainAPI() {
             })
         }
         
-        // Verifica se esiste una pagina successiva
         val hasNext = doc.select(".pagenavi a:contains(Next), .pagenavi a:contains(»)").isNotEmpty()
         
         return newHomePageResponse(
@@ -262,12 +258,12 @@ class GuardaSerie : MainAPI() {
                         val episodeNum = episodeMatch.groupValues[2].toInt()
                         
                         val mirrors = mutableListOf<MirrorLink>()
-                        val supervideoMatch = Regex("href=\"([^\"]+)\">([^<]+)").findAll(line)
+                        val linkMatches = Regex("href=\"([^\"]+)\">([^<]+)").findAll(line)
                         
-                        for (match in supervideoMatch) {
+                        for (match in linkMatches) {
                             val url = match.groupValues[1]
                             val name = match.groupValues[2]
-                            if (url.isNotEmpty() && (url.contains("supervideo") || url.contains("dr0pstream"))) {
+                            if (url.isNotEmpty() && (url.contains("supervideo") || url.contains("dr0pstream") || url.contains("dropload"))) {
                                 mirrors.add(MirrorLink(name, url))
                             }
                         }
