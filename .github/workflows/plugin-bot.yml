@@ -1,8 +1,8 @@
 name: Plugin Status Bot
 on:
-  schedule:
-    - cron: '0 9 */3 * *'
-  workflow_dispatch:
+#  schedule:
+#    - cron: '0 9 */3 * *'
+#  workflow_dispatch:
 
 jobs:
   send-report:
